@@ -12,6 +12,7 @@ fs.writeFileSync("./txt/output.txt", textOut);
 console.log("File written");*/
 
 //** Non-blocking, asynchronous */
+
 fs.readFile("./txt/start.txt", "utf-8", (err, data1) => {
   if (err) return console.log("ERROR");
 
