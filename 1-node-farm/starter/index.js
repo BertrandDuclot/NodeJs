@@ -1,7 +1,8 @@
-//* Synchronous way */
-
-// Read file
+// Files
 const fs = require("fs");
+const http = require("http");
+
+//* Synchronous way */
 
 /*const textIn = fs.readFileSync("./txt/input.txt", "utf-8");
 console.log(textIn);
@@ -13,7 +14,7 @@ console.log("File written");*/
 
 //** Non-blocking, asynchronous */
 
-fs.readFile("./txt/start.txt", "utf-8", (err, data1) => {
+/*fs.readFile("./txt/start.txt", "utf-8", (err, data1) => {
   if (err) return console.log("ERROR");
 
   fs.readFile(`./txt/${data1}.txt`, "utf-8", (err, data2) => {
@@ -26,4 +27,14 @@ fs.readFile("./txt/start.txt", "utf-8", (err, data1) => {
     });
   });
 });
-console.log("will read");
+console.log("will read");*/
+
+// Server
+const server = http.createServer((req, res) => {
+  console.log(req);
+  res.end("Hello from the server");
+});
+
+server.listen(8000, "127.0.0.1", () => {
+  console.log("listening");
+});
