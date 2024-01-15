@@ -1,37 +1,48 @@
 const fs = require('fs');
 const express = require('express');
+const { create } = require('domain');
+const morgan = require('morgan');
 
 const app = express();
 
 app.use(express.json());
 
-/*app.get('/', (req, res) => {
-  res
-    .status(404)
-    .json({ message: 'Hello from the server side', app: 'Natours' });
+// MIDDLEWARES
+
+app.use(morgan('dev'));
+app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log('Hello from the Middleware');
+  next();
 });
 
-app.post('/', (req, res) => {
-  res.send('You can post to this endpoint');
-});*/
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
+
+///////////////////////////////////////////
 
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
-// GET
-app.get('/api/v1/tours', (req, res) => {
+// Route handlers
+
+const getAllTours = (req, res) => {
+  console.log(req.requestTime);
   res.status(200).json({
     status: 'success',
+    requestAt: req.requestTime,
     results: tours.length,
     data: {
       tours,
     },
   });
-});
+};
 
-// GET 2
-app.get('/api/v1/tours/:id', (req, res) => {
+const getTour = (req, res) => {
   console.log(req.params);
   const id = req.params.id * 1;
   const tour = tours.find((el) => el.id === id);
@@ -49,12 +60,9 @@ app.get('/api/v1/tours/:id', (req, res) => {
       tour,
     },
   });
-});
+};
 
-// POST
-app.post('/api/v1/tours', (req, res) => {
-  //console.log(req.body);
-
+const createTour = (req, res) => {
   const newID = tours[tours.length - 1].id + 1;
   const newTour = Object.assign({ id: newID }, req.body);
 
@@ -71,9 +79,63 @@ app.post('/api/v1/tours', (req, res) => {
       });
     }
   );
-});
+};
 
-// Listening
+const updateTour = (req, res) => {
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: 'fails',
+      message: 'Invalid ID',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour: '<Updated tour here...>',
+    },
+  });
+};
+
+const deleteTour = (req, res) => {
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: 'fails',
+      message: 'Invalid ID',
+    });
+  }
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+};
+
+// GET
+//app.get('/api/v1/tours', getAllTours);
+
+// POST
+//app.post('/api/v1/tours', createTour);
+
+// GET 2
+//app.get('/api/v1/tours/:id', getTour);
+
+// PATCH
+//app.patch('/api/v1/tours/:id', updateTour);
+
+// DELETE
+//app.delete('/api/v1/tours/:id', deleteTour);
+
+// ROUTES
+app.route('/api/v1/tours').get(getAllTours).post(createTour);
+
+app
+  .route('/api/v1/tours/:id')
+  .get(getTour)
+  .patch(updateTour)
+  .delete(deleteTour);
+
+// START SERVER
 const port = 3000;
 app.listen(port, () => {
   console.log(`App running on port ${port}...`);
