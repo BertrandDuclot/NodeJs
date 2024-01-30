@@ -1,5 +1,4 @@
 const express = require('express');
-const { create } = require('domain');
 const morgan = require('morgan');
 
 const AppError = require('./utils/appError');
@@ -9,16 +8,12 @@ const userRouter = require('./routes/userRoutes');
 
 const app = express();
 
-app.use(express.json());
-
-// MIDDLEWARES
-console.log(process.env.NODE_ENV);
-if (process.env.NODE_ENV == 'development') {
+// 1) MIDDLEWARES
+if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
 app.use(express.json());
-
 app.use(express.static(`${__dirname}/public`));
 
 app.use((req, res, next) => {
@@ -26,18 +21,14 @@ app.use((req, res, next) => {
   next();
 });
 
-///////////////////////////////////////////
-
-// ROUTES
-
+// 3) ROUTES
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
 app.all('*', (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
 app.use(globalErrorHandler);
 
-// START SERVER
 module.exports = app;
