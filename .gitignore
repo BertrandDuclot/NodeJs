@@ -9093,3 +9093,12 @@
 4-natours/starter/node_modules/nodemailer/lib/well-known/index.js
 4-natours/starter/node_modules/nodemailer/lib/well-known/services.json
 4-natours/starter/node_modules/nodemailer/lib/xoauth2/index.js
+4-natours/starter/node_modules/helmet/CHANGELOG.md
+4-natours/starter/node_modules/helmet/index.cjs
+4-natours/starter/node_modules/helmet/index.d.cts
+4-natours/starter/node_modules/helmet/index.d.mts
+4-natours/starter/node_modules/helmet/index.mjs
+4-natours/starter/node_modules/helmet/LICENSE
+4-natours/starter/node_modules/helmet/package.json
+4-natours/starter/node_modules/helmet/README.md
+4-natours/starter/node_modules/helmet/SECURITY.md
