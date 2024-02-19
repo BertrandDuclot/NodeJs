@@ -101,12 +101,3 @@ reviewSchema.post(/^findOneAnd/, async function() {
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;
-
-
-
-reviewSchema.pre(/^find/, function (next {
-  this.populate ({
-    path: 'tour';
-    select: 'name';
-  }).populate()
-}))
